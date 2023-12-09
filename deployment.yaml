@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: peoplsuite
+  labels:
+    app: peoplesuite
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: peoplesuite
+  template:
+    metadata:
+      labels:
+        app: peoplesuite
+    spec:
+      containers:
+      - name: peoplesuite
+        image: nga32242/peoplesuite
+        ports:
+        - containerPort: 8080
+        env:
+        - name: FLASK_ENV
+          value: "production"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: peoplesuite
+  labels:
+    app: peoplesuite
+spec:
+  selector:
+    app: peoplesuite
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80
+    targetPort: 8081
+    nodePort:8080
+  type: LoadBalancer
